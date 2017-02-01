@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title>Boxes test</title>
+    <script src="draw.js"></script>
+    <script src="main.js"></script>
+    <style type="text/css">
+      canvas { border: 1px solid black; }
+    </style>
+  </head>
+  <body >
+      <!--onload="draw(getRandomRects(false))"-->
+      <button onclick="draw(getRandomRects(true))">Square</button>
+      <button onclick="draw(getRandomRects(false))">Non-square</button>
+      <div id="drawArea">
+      </div>
+      <p id="log"></p>
+  </body>
+</html>
