@@ -82,35 +82,61 @@ function getColor(idx) {
 }
 
 function getSampleBoxes() {
-    var res = [
-        {x0: 30, x1: 60, h: 100},
-        {x0: 50, x1: 70, h: 150},
-        {x0: 70, x1: 90, h: 80},
+    var res = [];
+    pushBoxes(res, [
+        {x0: 0, x1: 30, h: 100},
+        {x0: 20, x1: 40, h: 150},
+        {x0: 40, x1: 60, h: 80},
+    ]);
 
-        {x0: 110, x1: 130, h: 100},
-        {x0: 130, x1: 150, h: 150},
-        {x0: 150, x1: 170, h: 110},
+    pushBoxes(res, [
+        {x0: 0, x1: 20, h: 100},
+        {x0: 20, x1: 40, h: 150},
+        {x0: 40, x1: 60, h: 110},
+    ]);
 
-        {x0: 190, x1: 210, h: 100},
-        {x0: 190, x1: 230, h: 130},
-        {x0: 190, x1: 250, h: 160},
+    pushBoxes(res, [
+        {x0: 0, x1: 20, h: 100},
+        {x0: 0, x1: 40, h: 130},
+        {x0: 0, x1: 60, h: 160},
+    ]);
 
-        {x0: 270, x1: 330, h: 100},
-        {x0: 290, x1: 330, h: 140},
-        {x0: 310, x1: 330, h: 180},
+    pushBoxes(res, [
+        {x0: 0, x1: 60, h: 100},
+        {x0: 20, x1: 60, h: 140},
+        {x0: 40, x1: 60, h: 180},
+    ]);
 
-        {x0: 350, x1: 450, h: 200},
-        {x0: 370, x1: 430, h: 180},
-        {x0: 390, x1: 410, h: 160},
+    pushBoxes(res, [
+        {x0: 20, x1: 80, h: 180},
+        {x0: 40, x1: 60, h: 160},
+        {x0: 0, x1: 100, h: 200},
+    ]);
 
-        {x0: 470, x1: 530, h: 150},
-        {x0: 490, x1: 510, h: 200},
-        {x0: 500, x1: 550, h: 100},
-    ];
+    pushBoxes(res, [
+        {x0: 0, x1: 60, h: 150},
+        {x0: 20, x1: 40, h: 200},
+        {x0: 30, x1: 80, h: 100},
+    ]);
+
+    pushBoxes(res, [
+        {x0: 0, x1: 20, h: 100},
+        {x0: 20, x1: 40, h: 100},
+    ]);
+
     for (var i = 0; i < res.length; i++) {
         res[i].clr = getColor(i);
     }
     return res;
+}
+
+function pushBoxes(res, group) {
+    var lastX = res.length > 0 ? res[res.length-1].x1 : 0;
+    lastX += 20;
+    for (var i = 0; i < group.length; i++) {
+        var b = group[i];
+        res.push({ x0: lastX + b.x0, x1: lastX + b.x1, h: b.h });
+    }
 }
 
 function logBoxes(boxes) {
