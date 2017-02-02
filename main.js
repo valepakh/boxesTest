@@ -1,40 +1,62 @@
 function draw(boxes) {
+    drawBoxes(boxes);
+
     var points = compute(boxes);
     drawAll(boxes, points);
+}
+
+var debug = true;
+
+function addPoint(res, x, y) {
+    if (debug) {
+        if (res.length == 0) {
+            ctx.beginPath();
+            ctx.moveTo(x, horZero - y);
+        } else {
+            ctx.lineTo(x, horZero - y);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(x, horZero - y);
+        }
+    }
+    var p = { x: x, y: y };
+    res.push(p);
+    return p;
 }
 
 function compute(boxes) {
     var points = genPoints(boxes);
     var res = [];
-    var cur = { x: points[0].x, y: 0 };
     var curBoxes = []; // list of boxes sorted by height
-    res.push({ x: cur.x, y: cur.y });
+    var cur = addPoint(res, points[0].x, 0);
     for (var i = 0; i < points.length; i++) {
         var p = points[i];
         if (p.type == 0) { // start
             addBox(curBoxes, p.b);
             if (p.y > cur.y) {
                 if (p.x > cur.x) {
-                    cur.x = p.x;
-                    res.push({ x: cur.x, y: cur.y });
+                    cur = addPoint(res, p.x, cur.y);
                 }
-                if (i >= points.length - 1 || points[i+1].x != cur.x) {
-                    cur.y = p.y;
-                    res.push({ x: cur.x, y: cur.y }); // front up
+                if (i < points.length-1 && points[i+1].x == cur.x) {
+                    continue;
                 }
+                cur = addPoint(res, cur.x, p.y); // front up
             }
         } else { // end
             curBoxes.splice(bsearch(curBoxes, p.b), 1); // always found
             var lastH = curBoxes.length > 0 ? curBoxes[curBoxes.length-1].h : 0;
             if (lastH < cur.y) { // back down
+                // skip identical points
+                if (i < points.length-1 && points[i+1].x == p.x && points[i+1].y == p.y) {
+                    continue;
+                }
                 if (p.x > cur.x) {
-                    cur.x = p.x;
-                    res.push({ x: cur.x, y: cur.y });
+                    cur = addPoint(res, p.x, cur.y);
                 }
-                if (i >= points.length - 1 || points[i+1].x != cur.x) {
-                    cur.y = lastH;
-                    res.push({ x: cur.x, y: cur.y });
+                if (i < points.length-1 && points[i+1].x == cur.x) {
+                    continue;
                 }
+                cur = addPoint(res, cur.x, lastH);
             }
         }
     }

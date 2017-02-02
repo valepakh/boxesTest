@@ -7,19 +7,25 @@ function drawAll(boxes, points) {
     logBoxes(boxes);
     logPoints(points);
 
+    drawBoxes(boxes);
+    drawLine(points);
+}
+
+function prepareCtx() {
     canvas = document.getElementById('drawArea');
     h = canvas.height;
     horZero = h - Math.floor(h/20);
     if (canvas.getContext) {
         ctx = canvas.getContext('2d');
     }
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    drawBoxes(ctx, boxes);
-    drawLine(ctx, points);
 }
 
-function drawBoxes(ctx, boxes) {
+function drawBoxes(boxes) {
+    if (ctx == undefined) {
+        prepareCtx();
+    }
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
     for (var i = 0; i < boxes.length; i++) {
         var b = boxes[i];
         ctx.fillStyle = b.clr;
@@ -27,7 +33,7 @@ function drawBoxes(ctx, boxes) {
     }
 }
 
-function drawLine(ctx, points) {
+function drawLine(points) {
     ctx.beginPath();
     ctx.moveTo(points[0].x, horZero - points[0].y);
     for (var i = 1; i < points.length; i++) {
@@ -47,6 +53,7 @@ function drawLine(ctx, points) {
 }
 
 function getRandomBoxes() {
+    var canvas = document.getElementById('drawArea');
     var w = canvas.width;
     var h = canvas.height;
     var xmin = Math.floor(w/20);
@@ -76,8 +83,8 @@ function getColor(idx) {
     var i = (idx) % 6 + 1;
     var a = 0.5;
     var r = ((i & 4) >> 2) * l;
-    var g = ((i & 2) >> 1) * l;
-    var b = (i & 1) * l;
+    var b = ((i & 2) >> 1) * l;
+    var g = (i & 1) * l;
     return 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
 }
 
@@ -122,6 +129,7 @@ function getSampleBoxes() {
     pushBoxes(res, [
         {x0: 0, x1: 20, h: 100},
         {x0: 20, x1: 40, h: 100},
+        {x0: 40, x1: 60, h: 100},
     ]);
 
     for (var i = 0; i < res.length; i++) {
@@ -142,7 +150,7 @@ function pushBoxes(res, group) {
 function logBoxes(boxes) {
     for (var i = 0; i < boxes.length; i++) {
         var b = boxes[i];
-        var data = "b " + i + " [" + b.x0 + ", " + b.x1 + ", " + b.h + "]";
+        var data = "b " + i + " [" + b.x0 + ", " + b.x1 + ", " + b.h + "] " + b.clr;
         //document.getElementById('log').innerHTML += data + "<br>";
         console.log(data);
     }
